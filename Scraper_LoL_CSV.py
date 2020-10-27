@@ -5,9 +5,11 @@ import csv
 
 # Showing the path to the webdrive location
 PATH = 'C:\Program Files (x86)\chromedriver.exe'
-# driver = webdriver.Chrome(PATH)
 
 
+"""
+driver variable is used as the parameters. Scrape current page based on what I was looking for. Lists of html elements used text function
+"""
 def search(driver):  
 
     game_type = driver.find_elements_by_xpath("//div[@class='GameType']")
@@ -25,6 +27,12 @@ def search(driver):
     return stat
     
 
+
+"""
+Lists of html elements used as paramters. Based on what has been scraped, there are div classes with similar class name. Spliced list to remove undesired elements. 
+The function then replaces each html elements in the list with the text and does this for all the list in the parameters. 
+For champ_lvl, loop removes string 'level' and leaves only intergers. Function then returns tuple of lists.
+"""
 
 def text(game_champ, game_results, game_len, game_type, champ_lvl, game_kill, game_death, game_assist):
 
@@ -50,6 +58,12 @@ def text(game_champ, game_results, game_len, game_type, champ_lvl, game_kill, ga
     return game_champ, game_results, game_len, game_type, champ_lvl, game_kill, game_death, game_assist
 
 
+
+"""
+If function used, the passed parameter containing desired user name will be used to the search bar. After loading the result, it scrolls down to the bottom of the webpage
+and clicks on 'show more'. It does it 5 times. It then uses the search function and returns a tuple of list. CSV file is then made using the results and a new list of targetted
+username. If user was not found, it will be unsuccessful and close the browser.
+"""
 
 def scrape(u1):
     driver = webdriver.Chrome(PATH)
@@ -98,6 +112,10 @@ def scrape(u1):
 
     return ("Successful!")
 
+
+"""
+If scraper file is used directly, it will locate the driver and ask to input a username you would like to search up.
+"""
 
 
 if __name__ == '__main__':
