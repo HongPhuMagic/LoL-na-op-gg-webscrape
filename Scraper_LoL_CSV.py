@@ -2,18 +2,13 @@ from selenium import webdriver                           # Allows to connect bro
 from selenium.webdriver.common.keys import Keys          # Allows us to access common keys like enter and esc
 import time
 import csv
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
 # Showing the path to the webdrive location
 PATH = 'C:\Program Files (x86)\chromedriver.exe'
-
-# Creating a driver object containing the browser selection and linking it to the webdrive executable  
-driver = webdriver.Chrome(PATH)
+# driver = webdriver.Chrome(PATH)
 
 
-def scrap():  
+def search(driver):  
 
     game_type = driver.find_elements_by_xpath("//div[@class='GameType']")
     game_results = driver.find_elements_by_xpath("//div[@class='GameResult']")
@@ -29,6 +24,8 @@ def scrap():
     stat = text(game_champ, game_results, game_len, game_type, champ_lvl, game_kill, game_death, game_assist)
     return stat
     
+
+
 def text(game_champ, game_results, game_len, game_type, champ_lvl, game_kill, game_death, game_assist):
 
     game_champ = game_champ[7:]
@@ -53,26 +50,28 @@ def text(game_champ, game_results, game_len, game_type, champ_lvl, game_kill, ga
     return game_champ, game_results, game_len, game_type, champ_lvl, game_kill, game_death, game_assist
 
 
-if __name__ == '__main__':
-    username = str(input())
 
+def scrape(u1):
+    driver = webdriver.Chrome(PATH)
     try:
-        # Getting the targetted website
+      
         driver.get("https://na.op.gg/")
 
         driver.maximize_window()
         
-        search = driver.find_element_by_xpath("//input[@class='summoner-search-form__text']")
-        search.send_keys(username)
-        search.send_keys(Keys.RETURN)
+        searching = driver.find_element_by_xpath("//input[@class='summoner-search-form__text']")
+        searching.send_keys(u1)
+        searching.send_keys(Keys.RETURN)
         time.sleep(1)
 
         for i in range(5):
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             link = driver.find_element_by_link_text('Show More')
             link.click()
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(1)
 
-        champ, result, length, type, lvl, kill, death, assist = scrap()
+        champ, result, length, type, lvl, kill, death, assist = search(driver)
 
         time.sleep(5)
         driver.quit()
@@ -82,11 +81,11 @@ if __name__ == '__main__':
 
         user = []
         for use in range(len(champ)):
-            user.append(username)
+            user.append(u1)
 
         # Creating a CSV file by appending the list I've created
         row = zip(user, champ, result, length, type, lvl, kill, death, assist)
-        with open(username + '_stat.csv','w', encoding='utf-8', newline='') as csvfile:
+        with open(u1 + '_stat.csv','w', encoding='utf-8', newline='') as csvfile:
             links_writer=csv.writer(csvfile)
             links_writer.writerow(ro0)
             for item in row:
@@ -95,5 +94,17 @@ if __name__ == '__main__':
     except:
         print('Username not found.')
         driver.quit()
+        return ('unsuccessful.')
 
+    return ("Successful!")
+
+
+
+if __name__ == '__main__':
+    # Creating a driver object containing the browser selection and linking it to the webdrive executable  
+    driver = webdriver.Chrome(PATH)
+    username = str(input())
+    scrape(username)
+
+    
 
