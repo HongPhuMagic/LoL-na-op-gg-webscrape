@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flasgger import Swagger
-import Scraper_Yelp_CSV
+import Scraper_league_headless
 
 app = Flask(__name__)
 Swagger(app)
@@ -27,7 +27,7 @@ def prediction():
     # u2 = request.args.get("Username 2")
     # u3 = request.args.get("Username 3")
 
-    goal = Scraper_Yelp_CSV.scrape(u1)
+    goal = Scraper_league_headless.scrape(u1)
     return str(goal)
 
 if __name__ == '__main__':
@@ -40,4 +40,4 @@ if __name__ == '__main__':
         # - name: Username 3
         #   in: query
         #   type: string
-        #   required: false    
+        #   required: false   
